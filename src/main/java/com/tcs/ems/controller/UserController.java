@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.ems.dto.RegisterRequest;
+import com.tcs.ems.dto.VerifyOtpRequest;
+import com.tcs.ems.service.OtpService;
 import com.tcs.ems.service.UserService;
 
 @RestController
@@ -14,16 +16,23 @@ public class UserController {
 
 	
 	private UserService userService;
+	private OtpService otpService;
 
-	public UserController(UserService userService) {
+
+	public UserController(UserService userService, OtpService otpService) {
+		
 		this.userService = userService;
+		this.otpService = otpService;
 	}
-	
-	
+
 
 	@PostMapping("/register")
 	public String userRegister(@RequestBody RegisterRequest registerRequest) {
 		return userService.register(registerRequest);
 	}
 	
+	@PostMapping("/verify-otp")
+	public String VerifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
+		return	otpService.VerifyOtp(verifyOtpRequest);
+	}
 }
