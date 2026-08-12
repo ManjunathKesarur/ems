@@ -49,7 +49,7 @@ public class UserService {
 			String otp=OtpGenerator.generateOtp();
 			
 			user.setOtp(otp);
-			user.setOtpexpirytime(LocalDateTime.now().plusMinutes(10));     // like it mention that otp expirs in next 10 min of geneartion
+			user.setOtpexpirytime(LocalDateTime.now().plusMinutes(1));     // like it mention that otp expirs in next 10 min of geneartion
 			
 			userRepository.save(user);
 			
