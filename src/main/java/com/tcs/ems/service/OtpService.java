@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.tcs.ems.dto.VerifyOtpRequest;
 import com.tcs.ems.entity.User;
+import com.tcs.ems.exception.UserNotFoundException;
 import com.tcs.ems.repository.UserRepository;
 
 @Service
@@ -30,12 +31,15 @@ public class OtpService {
 			User user = optionalUser.get();
 			
 			if(user.getOtp()==null) {
+				
 				return "the user is already verified";
 			}	
 		    if(!user.getOtp().equals(verifyOtpRequest.getOtp())) {	
+		    	
 		    	return " invalid OTP";
         	}
 		    if(LocalDateTime.now().isAfter(user.getOtpexpirytime())) {
+		    	
 		    	return "OTP expired";
 		    }
 		     else {
@@ -48,7 +52,8 @@ public class OtpService {
 		    }
 		    }
 			 else {
-				   return "no such user is present" ;
+				 
+			   throw new UserNotFoundException(verifyOtpRequest.getEmail()+" : is not registerd");
 			}
 	
 	}
