@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.tcs.ems.entity.Employee;
+import com.tcs.ems.entity.User;
+import com.tcs.ems.exception.EmailUpdateNotAllowedException;
 import com.tcs.ems.exception.MissingFieldException;
 import com.tcs.ems.exception.UserAlreadyExistsException;
 import com.tcs.ems.exception.UserNotFoundException;
@@ -80,17 +82,14 @@ public class EmployeeService {
 
 	
 	
-	public String updatePutEmployeeByEmail(Employee employee) {
+	public String updatePutEmployeeByEmail(Employee employee,String email) {
 		
-		Optional<Employee> optionals = employeeRepository.findById(employee.getEmail());
+		Optional<Employee> optionals = employeeRepository.findById(email);
 		
 		if(optionals.isPresent()) {
 			
 			if (employee.getName() == null || employee.getName().isBlank()) {
 	            throw new MissingFieldException("Name field is required for update");
-	        }
-	        if (employee.getEmail() == null || employee.getEmail().isBlank()) {
-	            throw new MissingFieldException("Email field is required for update");
 	        }
 	        if (employee.getDepartment() == null || employee.getDepartment().isBlank()) {
 	            throw new MissingFieldException("Department field is required for update");
@@ -98,20 +97,57 @@ public class EmployeeService {
 	        if (employee.getSalary() == null ) { 
 	            throw new MissingFieldException("Salary field is required for update");
 	        }
-	        if (employee.getSalary()<0) {
+	        if (employee.getSalary()<=0) {
 	        	throw new MissingFieldException("Salary field must be positive");
 	        }
+	        if (employee.getEmail()!=null) {
+	        	throw new EmailUpdateNotAllowedException("Email Update Not Allowed");
+	        }
+	        
+	        Employee employees= optionals.get();
 			
-			employeeRepository.save(employee);
+	        employees.setName(employee.getName());
+	        employees.setSalary(employee.getSalary());
+	        employees.setDepartment(employee.getDepartment());
+	        
+			employeeRepository.save(employees);
 				return "data updated";
 			
 		}else {
-				throw new UserNotFoundException("enterd email not exist so cant update the data");
+				throw new UserNotFoundException("enterd email is not registerd so cant update the data");
 		}
 	}
 	
 	
 	
+	public String updatePatchEmployeeByEmail(Employee employee , String email) {
+		
+	Optional<Employee> optional	= employeeRepository.findById(email);
+		
+		 if (optional.isPresent()) {
 
+		        Employee emp = optional.get();
+
+		        if (employee.getName() != null) {
+		            emp.setName(employee.getName());
+		        }
+		        if (employee.getSalary() != null) {
+		            emp.setSalary(employee.getSalary());
+		        }
+		        if (employee.getDepartment() != null) {
+		            emp.setDepartment(employee.getDepartment());
+		        }
+		        if (employee.getEmail()!=null) {
+		        	throw new EmailUpdateNotAllowedException("Email Update Not Allowed");
+		        }
+		        employeeRepository.save(emp);
+	
+		        	return "data updated for the fields";
+		
+		 		}else {
+		 				throw new UserNotFoundException("enterd email "+employee.getEmail()+" is not registerd so we cant update");
+		  }		
+	}
+	
 	
 }
