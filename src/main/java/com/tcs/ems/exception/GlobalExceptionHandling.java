@@ -45,4 +45,8 @@ public class GlobalExceptionHandling {
 		return new ResponseEntity<String>(emailException.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(MissingFieldException.class)
+	public ResponseEntity<String> MissingField(MissingFieldException missingFieldException){
+		return new ResponseEntity<String>(missingFieldException.getMessage(),HttpStatus.BAD_REQUEST);
+	}
 }

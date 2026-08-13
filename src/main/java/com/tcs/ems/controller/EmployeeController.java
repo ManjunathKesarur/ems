@@ -47,6 +47,6 @@ public class EmployeeController {
 	
 	@PutMapping
 	public String updateEmployeeByEmail(@RequestBody Employee employee) {
-		return employeeService.updateEmployeeByEmail(employee);
+		return employeeService.updatePutEmployeeByEmail(employee);
 	}
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Entity
@@ -19,8 +20,8 @@ public class Employee {
 	@NotBlank
 	private String name;
 	
-	@Positive
-	private double salary;
+	@PositiveOrZero     //allows salary with 0 and above
+	private Double salary;
 	
 	@NotBlank
 	private String department;
