@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tcs.ems.dto.RegisterRequest;
 import com.tcs.ems.entity.User;
+import com.tcs.ems.exception.UserAlreadyExistsException;
 import com.tcs.ems.repository.UserRepository;
 import com.tcs.ems.util.OtpGenerator;
 
@@ -37,7 +38,7 @@ public class UserService {
 		
 		Optional<User> ou= userRepository.getByEmail(registerRequest.getEmail());
 		if(ou.isPresent()) {
-			return "The Email Is Already Exists Please Enter The Unique Email";
+			throw new UserAlreadyExistsException(registerRequest.getEmail()+" : already exists");
 		}else {
 			User user=new User();
 			user.setName(registerRequest.getName());
