@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.tcs.ems.dto.ResendOtp;
 import com.tcs.ems.entity.User;
+import com.tcs.ems.exception.InvalidEmailException;
+import com.tcs.ems.exception.UserIsVerifiedException;
 import com.tcs.ems.repository.UserRepository;
 import com.tcs.ems.util.OtpGenerator;
 
@@ -28,17 +30,29 @@ public class ResendOtpService {
 		
 		Optional<User> optional = userRepository.getByEmail(resendOtp.getEmail());
 		if(optional.isPresent()) {
-			String otp=OtpGenerator.generateOtp();
+			
 			
 		User user =	optional.get();
+		
+		if(user.getOtp()==null) {
+			
+			throw new UserIsVerifiedException(resendOtp.getEmail()+" : already registerd");
+			
+		}
+		
+		String otp=OtpGenerator.generateOtp();
 		user.setOtpexpirytime(LocalDateTime.now().plusMinutes(2));
 		user.setOtp(otp);
 		
 		emailService.sendotp(resendOtp.getEmail(),otp);
 		userRepository.save(user);
+		
 		return "otp sent to"+" "+resendOtp.getEmail();
+		
 		}else {
-			return "invalid emailid :"+" "+resendOtp.getEmail();
+			
+			throw new InvalidEmailException(resendOtp.getEmail()+" : is not registerd email to get verifed");
+			
 		}
 	}
 }

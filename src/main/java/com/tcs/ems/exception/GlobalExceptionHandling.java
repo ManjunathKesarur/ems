@@ -39,4 +39,10 @@ public class GlobalExceptionHandling {
 		return new ResponseEntity<String>(otpExpiredException.getMessage(),HttpStatus.REQUEST_TIMEOUT);
 	}
 	
+	
+	@ExceptionHandler(InvalidEmailException.class)
+	public ResponseEntity<String> InvalidEmail(InvalidEmailException emailException){
+		return new ResponseEntity<String>(emailException.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	
 }
