@@ -11,32 +11,45 @@ import com.tcs.ems.repository.UserRepository;
 
 @Service
 public class OtpService {
+	
+	
 	private UserRepository userRepository;
 
-	public OtpService(UserRepository userRepository) {
-		
+	
+	public OtpService(UserRepository userRepository) {	
 		this.userRepository = userRepository;
 	}
-public String VerifyOtp(VerifyOtpRequest verifyOtpRequest) {
-	Optional<User> optionalUser = userRepository.getByEmail(verifyOtpRequest.getEmail());
-	if(optionalUser.isPresent()) {
-		User user = optionalUser.get();
-		if(!user.getOtp().equals(verifyOtpRequest.getOtp())) {
-		
-			return " invalid OTP";
-	}
-		if(LocalDateTime.now().isAfter(user.getOtpexpirytime())) {
-			return "OTP expired";
-		}
-		else {
-			user.setVerified(true);
-			user.setOtp(null);
-			user.setOtpexpirytime(null);
-			userRepository.save(user);
-			return"otp verified successfully";
-		}
-}else {
-	return "no such user is present";
-}
 	
-}}
+	
+	public String VerifyOtp(VerifyOtpRequest verifyOtpRequest) {
+		
+		Optional<User> optionalUser = userRepository.getByEmail(verifyOtpRequest.getEmail());
+		
+		if(optionalUser.isPresent()) {
+				
+			User user = optionalUser.get();
+			
+			if(user.getOtp()==null) {
+				return "the user is already verified";
+			}	
+		    if(!user.getOtp().equals(verifyOtpRequest.getOtp())) {	
+		    	return " invalid OTP";
+        	}
+		    if(LocalDateTime.now().isAfter(user.getOtpexpirytime())) {
+		    	return "OTP expired";
+		    }
+		     else {
+		    	    user.setVerified(true);
+		    	 	user.setOtp(null);
+		    	 	user.setOtpexpirytime(null);
+		    	 	userRepository.save(user);
+			
+		    	 	return"otp verified successfully";
+		    }
+		    }
+			 else {
+				   return "no such user is present" ;
+			}
+	
+	}
+	 }
