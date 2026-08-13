@@ -18,4 +18,8 @@ public class GlobalExceptionHandling {
 			return new ResponseEntity<String>(alreadyExistsException.getMessage(),HttpStatus.CONFLICT);
 	}
 	
+	@ExceptionHandler(UserIsVerifiedException.class)
+	public ResponseEntity<String> userIsVerified(UserIsVerifiedException  isVerifiedException){
+		return new ResponseEntity<String>(isVerifiedException.getMessage(),HttpStatus.BAD_REQUEST);
+	}
 }
