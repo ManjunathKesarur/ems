@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.ems.entity.Employee;
 import com.tcs.ems.service.EmployeeService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/employees")
@@ -28,7 +29,7 @@ public class EmployeeController {
 	}
 	
 	@PostMapping
-	public String cretaeEmployee(@RequestBody Employee employee) {
+	public String cretaeEmployee(@Valid	@RequestBody Employee employee) {
 		return employeeService.cretaeEmployee(employee);
 	}
 	

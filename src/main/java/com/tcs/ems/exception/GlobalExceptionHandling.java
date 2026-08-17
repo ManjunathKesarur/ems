@@ -1,14 +1,34 @@
 package com.tcs.ems.exception;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandling {
 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String,String>> invalidData(MethodArgumentNotValidException method){
+	
+		Map<String,String> messaMap=new HashMap<String, String>();
+		
+		List<FieldError> message=	method.getBindingResult().getFieldErrors();
+		
+		for(FieldError fieldError:message) {
+			messaMap.put(fieldError.getField(),fieldError.getDefaultMessage());
+		}
+	
+		return new ResponseEntity<Map<String,String>> (messaMap,HttpStatus.BAD_REQUEST);
+	}
+	
+	
 	
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<String> userNotFound(UserNotFoundException userNotFoundException ){
