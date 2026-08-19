@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.ems.entity.Employee;
@@ -39,8 +40,9 @@ public class EmployeeController {
 	}
 	
 	@GetMapping
-	public List<Employee> fetchAllEmployees(){
-	return employeeService.fetchAllEmployees();
+	public List<Employee> fetchAllEmployees(@RequestParam(required = false,defaultValue = "0",name = "pageNumber") Integer pageNumber,
+			@RequestParam(required = false,defaultValue = "5",name = "pageSize")Integer pageSize){
+	return employeeService.fetchAllEmployees(pageNumber,pageSize);
 	}
 	
 	@DeleteMapping("/{email}")

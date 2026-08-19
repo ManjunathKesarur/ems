@@ -3,6 +3,9 @@ package com.tcs.ems.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tcs.ems.entity.Employee;
@@ -56,14 +59,18 @@ public class EmployeeService {
 
 	
 	
-	public List<Employee> fetchAllEmployees(){
+	public List<Employee> fetchAllEmployees(Integer pageNumber, Integer pageSize) {
+		if(pageSize<=0 ||pageSize==null) {
+			throw new MissingFieldException("enter the pagesize positive");
+		}
 		
-		List<Employee> employees=employeeRepository.findAll();
+		Pageable pageable=PageRequest.of(pageNumber, pageSize);
+	Page<Employee> pe=	employeeRepository.findAll(pageable);
 	
-			if(employees.isEmpty()) {
+			if(pe.isEmpty()) {
 				throw new UserNotFoundException("No Data's are present to fetch");
 			}else {
-				return 	employees;
+				return 	pe.getContent();
 			}
 	}
 
