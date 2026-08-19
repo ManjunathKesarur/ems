@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.tcs.ems.entity.Employee;
@@ -59,12 +60,12 @@ public class EmployeeService {
 
 	
 	
-	public List<Employee> fetchAllEmployees(Integer pageNumber, Integer pageSize) {
+	public List<Employee> fetchAllEmployees(Integer pageNumber, Integer pageSize,String field) {
 		if(pageSize<=0 ||pageSize==null) {
 			throw new MissingFieldException("enter the pagesize positive");
 		}
-		
-		Pageable pageable=PageRequest.of(pageNumber, pageSize);
+		Sort sort=Sort.by(field).ascending();
+		Pageable pageable=PageRequest.of(pageNumber, pageSize,sort);
 	Page<Employee> pe=	employeeRepository.findAll(pageable);
 	
 			if(pe.isEmpty()) {

@@ -41,8 +41,9 @@ public class EmployeeController {
 	
 	@GetMapping
 	public List<Employee> fetchAllEmployees(@RequestParam(required = false,defaultValue = "0",name = "pageNumber") Integer pageNumber,
-			@RequestParam(required = false,defaultValue = "5",name = "pageSize")Integer pageSize){
-	return employeeService.fetchAllEmployees(pageNumber,pageSize);
+			@RequestParam(required = false,defaultValue = "5",name = "pageSize")Integer pageSize,
+			@RequestParam(required = false,defaultValue = "salary",name = "field")String field ){
+	return employeeService.fetchAllEmployees(pageNumber,pageSize,field);
 	}
 	
 	@DeleteMapping("/{email}")
